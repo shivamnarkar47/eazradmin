@@ -4,10 +4,13 @@ import { ApiResponse, User } from "@/lib/types";
 import { NextResponse } from "next/server";
 
 
+
+
 export async function GET(
     request: Request,
-    { params }: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
+    const { id } = await params;
     const authHeader = request.headers.get("Authorization");
     const token = authHeader?.split(" ")[1];
 
@@ -18,7 +21,7 @@ export async function GET(
         );
     }
 
-    const user = mockUsers.find((u) => u.id === params.id);
+    const user = mockUsers.find((u) => u.id === id);
     const response: ApiResponse = {
         success: !!user,
         user: user,
